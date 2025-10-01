@@ -1,13 +1,9 @@
-import './App.css'
-import ContactForm from './components/ContactForm'
+import ContactForm from "./ContactForm";
 
-function App() {
- 
+export default function App() {
   return (
-    <>
-     <ContactForm />
-    </>
-  )
+    <div>
+      <ContactForm />
+    </div>
+  );
 }
-
-export default App
