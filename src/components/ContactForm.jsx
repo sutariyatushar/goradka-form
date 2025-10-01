@@ -17,6 +17,7 @@ export default function ContactForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
       const res = await fetch("https://goradka-backend.onrender.com/submit", {
         method: "POST",
@@ -24,13 +25,21 @@ export default function ContactForm() {
         body: JSON.stringify(form),
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Server error");
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error("Server returned non-JSON response");
+      }
 
-      alert("Data submitted ✅");
+      if (!res.ok) throw new Error(data?.error || "Server error");
+
+      alert("Data submitted successfully ✅");
       setForm({ firstName: "", middleName: "", surname: "", phone: "" });
+
     } catch (err) {
       alert("Error: " + err.message);
+
     } finally {
       setLoading(false);
     }
@@ -39,8 +48,10 @@ export default function ContactForm() {
   return (
     <form className="form" onSubmit={handleSubmit}>
       <p className="title">Goradka</p>
-      <p className="message">Submit Your Details <br />
-Please fill out this form to add your contact information to the Goradka Village website. Your details will help us keep the community directory updated and connect villagers more easily.</p>
+      <p className="message">
+        Submit Your Details <br />
+        Please fill out this form to add your contact information to the Goradka Village website.
+      </p>
 
       <div className="flex">
         <label>
@@ -95,10 +106,6 @@ Please fill out this form to add your contact information to the Goradka Village
       <button className="submit" type="submit" disabled={loading}>
         {loading ? "Sending..." : "Submit"}
       </button>
-
-      {/* <p className="signin">
-        Already have an account? <a href="#">Signin</a>
-      </p> */}
     </form>
   );
 }
